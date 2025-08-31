@@ -8,6 +8,7 @@ import Joi from 'joi';
  */
 
 const priority = ['low', 'medium', 'high'];
+const status = ['pending', 'in-progress', 'completed'];
 
 export const createTaskSchema = Joi.object({
   // TODO: Define validation schema for creating a task
@@ -38,6 +39,13 @@ export const taskQuerySchema = Joi.object({
   // TODO: Define validation schema for query parameters
   // - status: optional, valid task status
   // - priority: optional, valid task priority
+
+  status: Joi.string().valid(...status).optional().messages({
+    'string.valid': 'status must be one of the following: pending, in-progress, completed',
+  }),
+  priority: Joi.string().valid(...priority).optional().messages({
+    'string.valid': 'priority must be one of the following: low, medium, high',
+  }),
 }).unknown(false); // Reject unknown query params
 
 // Validation helper functions
