@@ -21,8 +21,27 @@ export class TaskService {
     // - Filter by priority if provided  
     // - Sort by priority (high -> medium -> low) then by createdAt
     // - Return filtered and sorted tasks
-    
-    throw new Error('Not implemented yet');
+
+    // Define priority order
+    const order = { high: 1, medium: 2, low: 3 };
+
+    // Do filtering
+    const filteredTasks = tasks.filter((task) => {
+      const matchStatus = queryParams?.status ? task.status === queryParams.status : true;
+      const matchPriority = queryParams?.priority ? task.priority === queryParams.priority : true;
+
+      return matchStatus && matchPriority;
+    });
+
+    // Sort and return
+    return filteredTasks.sort((a, b) => {
+      const sortByPriority = order[a.priority] - order[b.priority];
+
+      // I chose not to use `calculateDaysDifference` helper function because it only returns the difference in days
+      const sortByTime = a.createdAt.getTime() - b.createdAt.getTime();
+
+      return sortByPriority || sortByTime;
+    });
   }
 
   static async createTask(taskData: CreateTaskRequest): Promise<Task> {
