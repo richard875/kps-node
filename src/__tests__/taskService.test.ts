@@ -75,6 +75,19 @@ describe('TaskService', () => {
 
       expect(result1.id).not.toBe(result2.id);
     });
+
+    it('should throw error when creating task with duplicate title', async () => {
+      const taskData: CreateTaskRequest = {
+        title: 'Duplicate Task',
+        priority: 'high',
+      };
+      
+      // Create first task
+      await TaskService.createTask(taskData);
+      
+      // Create second task and expect error to be thrown
+      await expect(TaskService.createTask(taskData)).rejects.toThrow('Task with this title already exists');
+    });
   });
 
   describe('getAllTasks', () => {
