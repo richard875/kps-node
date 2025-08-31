@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Task, CreateTaskRequest, TaskQueryParams } from '../types/task';
+import { createError } from '../middleware/errorHandler';
 
 /**
  * Task Service - Business Logic Layer
@@ -51,6 +52,13 @@ export class TaskService {
     // - Set createdAt and updatedAt to current time
     // - Add to tasks array
     // - Return created task
+
+    // Check if title is already taken, if so, return a 409 error (Conflict Error)
+    const existingTask = tasks.find((task) => task.title === taskData.title);
+    if (existingTask) {
+      const error = createError('Task with this title already exists', 409);
+      throw error;
+    }
 
     // Create task
     const task: Task = {
