@@ -30,8 +30,8 @@ export const createTaskSchema = Joi.object({
       'string.empty': 'priority is required',
       'string.valid': 'priority must be one of the following: low, medium, high',
   }),
-  dueDate: Joi.date().optional().messages({
-    'date.base': 'dueDate must be a valid date',
+  dueDate: Joi.string().isoDate().optional().messages({
+    'string.isoDate': 'dueDate must be a valid ISO date',
   }),
 }).unknown(false); // Reject unknown fields
 
