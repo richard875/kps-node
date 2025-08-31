@@ -24,13 +24,17 @@ export const errorHandler = (
   // - Format error responses consistently
   // - Log errors appropriately
   
-  console.error('Error:', err);
-  
+  // No console.error unless 5xx error (the no console errors task is in Success Criteria)
+  const statusCode = err.statusCode || 500; // default to 500 error
+  if (statusCode >= 500) {
+    console.error(err);
+  }
+
   // Default error response
-  res.status(err.statusCode || 500).json({
+  res.status(statusCode).json({
     error: {
       message: err.message || 'Internal Server Error',
-      status: err.statusCode || 500,
+      status: statusCode,
       timestamp: new Date().toISOString(),
     },
   });
