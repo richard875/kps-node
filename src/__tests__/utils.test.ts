@@ -1,4 +1,4 @@
-import { isValidUUID, formatDate, calculateDaysDifference, isDateWithin24Hours } from '../utils/helpers';
+import { isValidUUID, formatDate, calculateDaysDifference, isDateWithin24Hours, dueDateInFuture } from '../utils/helpers';
 
 describe('Utility Functions', () => {
   
@@ -109,6 +109,48 @@ describe('Utility Functions', () => {
       
       const result = isDateWithin24Hours(now);
       expect(result).toBe(false);
+    });
+  });
+
+  describe('dueDateInFuture', () => {
+    it('should return true for date within 24 hours from now', () => {
+      const futureDate = new Date();
+      futureDate.setHours(futureDate.getHours() + 12); // 12 hours from now
+      
+      const result = dueDateInFuture(futureDate);
+      expect(result).toBe(true);
+    });
+
+    it('should return true for date exactly 24 hours from now', () => {
+      const futureDate = new Date();
+      futureDate.setHours(futureDate.getHours() + 24); // Exactly 24 hours from now
+      
+      const result = dueDateInFuture(futureDate);
+      expect(result).toBe(true);
+    });
+
+    it('should return true for date exactly 1 minute from now', () => {
+      const futureDate = new Date();
+      futureDate.setMinutes(futureDate.getMinutes() + 1); // Exactly 1 minute from now
+
+      const result = dueDateInFuture(futureDate);
+      expect(result).toBe(true);
+    });
+
+    it('should return true for date exactly 5 minutes from now', () => {
+      const futureDate = new Date();
+      futureDate.setMinutes(futureDate.getMinutes() + 5); // Exactly 5 minutes from now
+
+      const result = dueDateInFuture(futureDate);
+      expect(result).toBe(true);
+    });
+
+    it('should return true for date exactly 1 second from now', () => {
+      const futureDate = new Date();
+      futureDate.setSeconds(futureDate.getSeconds() + 1); // Exactly 1 second from now
+
+      const result = dueDateInFuture(futureDate);
+      expect(result).toBe(true);
     });
   });
 }); 
