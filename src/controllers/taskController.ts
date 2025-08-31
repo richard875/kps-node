@@ -42,6 +42,10 @@ export const getAllTasks = async (req: Request, res: Response, next: NextFunctio
 
     res.status(200).json(formattedTasks);
   } catch (error) {
+    if (error instanceof Error && 'statusCode' in error && 'message' in error) {
+      return next(error);
+    }
+
     next(createError('Internal server error', 500));
   }
 };
@@ -61,6 +65,10 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
     const task = await TaskService.createTask(req.body);
     res.status(201).json(task);
   } catch (error) {
+    if (error instanceof Error && 'statusCode' in error && 'message' in error) {
+      return next(error);
+    }
+
     next(createError('Internal server error', 500));
   }
 }; 
