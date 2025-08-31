@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 // Import your validation schemas when ready
-import { validateTaskQuery } from '../validation/taskValidation';
+import { validateCreateTask, validateTaskQuery } from '../validation/taskValidation';
 import { TaskService } from '../services/taskService';
 import { createError } from '../middleware/errorHandler';
 import { formatDate } from '../utils/helpers';
@@ -52,9 +52,15 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
     // - Validate request body using Joi schema
     // - Call task service to create task
     // - Return 201 with created task
-    
-    res.status(501).json({ message: 'Not implemented yet' });
+
+    const validation = validateCreateTask(req.body);
+    if (validation.error) {
+      return next(createError(validation.error.message, 400));
+    }
+
+    const task = await TaskService.createTask(req.body);
+    res.status(201).json(task);
   } catch (error) {
-    next(error);
+    next(createError('Internal server error', 500));
   }
 }; 
