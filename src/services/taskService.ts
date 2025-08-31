@@ -51,8 +51,22 @@ export class TaskService {
     // - Set createdAt and updatedAt to current time
     // - Add to tasks array
     // - Return created task
-    
-    throw new Error('Not implemented yet');
+
+    // Create task
+    const task: Task = {
+      id: uuidv4(),
+      title: taskData.title,
+      description: taskData.description,
+      priority: taskData.priority,
+      status: 'pending',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      dueDate: taskData.dueDate,
+    };
+
+    // Add task to mock DB (in-memory storage)
+    tasks.push(task);
+    return task;
   }
 
   // Test helper method - clears all tasks for testing
