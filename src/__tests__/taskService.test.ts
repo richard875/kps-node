@@ -1,3 +1,5 @@
+import request from 'supertest';
+import { app } from '../server';
 import { TaskService } from '../services/taskService';
 import { CreateTaskRequest } from '../types/task';
 
@@ -10,10 +12,10 @@ import { CreateTaskRequest } from '../types/task';
 
 describe('TaskService', () => {
   
-  beforeEach(() => {
+  beforeEach(async () => {
     // Clear tasks before each test to ensure test isolation
     // Candidates will need to implement a method to clear tasks or handle this
-    jest.clearAllMocks();
+    await request(app).delete('/api/tasks/test-clear-all');
   });
 
   describe('createTask', () => {
