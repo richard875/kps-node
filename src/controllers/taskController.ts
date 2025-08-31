@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import { Task, CreateTaskRequest, TaskQueryParams } from '../types/task';
 // Import your validation schemas when ready
-// import { createTaskSchema } from '../validation/taskValidation';
+import { validateTaskQuery } from '../validation/taskValidation';
+import { TaskService } from '../services/taskService';
+import { createError } from '../middleware/errorHandler';
+import { formatDate } from '../utils/helpers';
 
 /**
  * Task Controller
@@ -22,10 +24,25 @@ export const getAllTasks = async (req: Request, res: Response, next: NextFunctio
     // - Call task service method
     // - Sort by priority then by createdAt
     // - Return filtered and sorted tasks
-    
-    res.status(501).json({ message: 'Not implemented yet' });
+
+    const validation = validateTaskQuery(req.query);
+    if (validation.error) {
+      return next(createError(validation.error.message, 400));
+    }
+
+    const tasks = await TaskService.getAllTasks(req.query);
+
+    // Use `formatDate` in controller layer to keep date consistent for JSON transport
+    const formattedTasks = tasks.map((task) => ({
+      ...task,
+      createdAt: formatDate(task.createdAt),
+      updatedAt: formatDate(task.updatedAt),
+      dueDate: task.dueDate ? formatDate(task.dueDate) : undefined,
+    }));
+
+    res.status(200).json(formattedTasks);
   } catch (error) {
-    next(error);
+    next(createError('Internal server error', 500));
   }
 };
 
