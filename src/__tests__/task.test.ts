@@ -280,14 +280,3 @@ describe('Task API Integration Tests', () => {
     });
   });
 });
-
-// Helper functions for testing
-const createTestTask = async (taskData: any) => {
-  // TODO: Helper function to create a test task
-  // Return the created task for use in other tests
-};
-
-const clearAllTasks = async () => {
-  // TODO: Helper function to clear all tasks between tests
-  // This ensures test isolation
-}; 
