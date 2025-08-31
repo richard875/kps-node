@@ -165,9 +165,9 @@ describe('TaskService', () => {
 
       expect(result).toHaveLength(3);
       // Should be sorted by priority: high -> medium -> low
-      expect(result[0].priority).toBe('high');
-      expect(result[1].priority).toBe('medium');
-      expect(result[2].priority).toBe('low');
+      expect(result[0].priority).toBe(highTask.priority); // high
+      expect(result[1].priority).toBe(mediumTask.priority); // medium
+      expect(result[2].priority).toBe(lowTask.priority); // low
     });
   });
 }); 
