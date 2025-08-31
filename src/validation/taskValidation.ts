@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { dueDateInFuture } from '../utils/helpers';
 
 /**
  * Task Validation Schemas
@@ -30,8 +31,15 @@ export const createTaskSchema = Joi.object({
       'string.empty': 'priority is required',
       'string.valid': 'priority must be one of the following: low, medium, high',
   }),
-  dueDate: Joi.string().isoDate().optional().messages({
+  dueDate: Joi.string().isoDate().optional().custom((value, helpers) => {
+    const date = new Date(value);
+    if (!dueDateInFuture(date)) {
+      return helpers.error('date.invalid');
+    }
+    return value;
+  }).messages({
     'string.isoDate': 'dueDate must be a valid ISO date',
+    'date.invalid': 'dueDate must be in the future',
   }),
 }).unknown(false); // Reject unknown fields
 
